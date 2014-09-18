@@ -1,0 +1,32 @@
+{
+  "name": "dice-module",
+  "version": "0.0.0",
+  "description": "Dice module that will parse, format, and execute dice notation commands",
+  "main": "dice.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/NickMele/dice-module.git"
+  },
+  "keywords": [
+    "dice",
+    "roll",
+    "die",
+    "notation"
+  ],
+  "author": "Nick Mele",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NickMele/dice-module/issues"
+  },
+  "homepage": "https://github.com/NickMele/dice-module",
+  "dependencies": {
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
+  }
+}
