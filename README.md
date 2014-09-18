@@ -1,0 +1,4 @@
+dice
+====
+
+Dice Rolling Module
