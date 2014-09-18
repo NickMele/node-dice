@@ -1,4 +1,4 @@
-dice
+Dice Module
 ====
 
 Dice Rolling Module
