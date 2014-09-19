@@ -41,6 +41,9 @@ Dice.prototype.throttle = function throttle() {
 
 // rolls the die and returns the outcome
 Dice.prototype.roll = function roll(faces) {
+  if (typeof faces !== 'number') {
+    throw new Error('`faces` must be a number');
+  }
   var min = 1;
   var max = faces;
   return Math.floor(Math.random() * (max - min + 1)) + min;
