@@ -53,10 +53,15 @@ Dice.prototype.roll = function roll(faces) {
 Dice.prototype.execute = function execute(command) {
   var self = this;
   var data = self.data;
+
+  if (typeof command === 'undefined' || (typeof command === 'string' && !command.trim().length)) {
+    command = self.options.command;
+  }
+
   var parsed = self.parse(command);
 
   data.parsed = parsed;
-  data.command = parsed.command;
+  data.command = command;
 
   // throttle values provided
   self.throttle();
