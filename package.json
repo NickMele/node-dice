@@ -1,5 +1,5 @@
 {
-  "name": "dice",
+  "name": "node-dice-js",
   "version": "0.1.0",
   "description": "Dice module that will parse, format, and execute dice notation commands",
   "main": "dice.js",

@@ -55,8 +55,8 @@ Dice.prototype.execute = function execute(command) {
   var data = self.data;
   var parsed = self.parse(command);
 
-  data.command = command;
   data.parsed = parsed;
+  data.command = parsed.command;
 
   // throttle values provided
   self.throttle();
