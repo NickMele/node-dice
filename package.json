@@ -4,7 +4,8 @@
   "description": "Dice module that will parse, format, and execute dice notation commands",
   "main": "dice.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "autotest": "./node_modules/.bin/supervisor -q -n exit -x npm run test"
   },
   "repository": {
     "type": "git",

@@ -1,27 +1,62 @@
 var _ = require('lodash');
 
+function Dice(options) {
+  var self = this;
+  var defaults = {
+    command: 'd20',
+    throttles: {
+      times: 100,
+      repeat: 100,
+      faces: 100,
+      multiplier: 100,
+      modifier: 100
+    }
+  };
+
+  self.options = _.assign(defaults, options);
+
+  self.data = {
+    command: null,
+    parsed: null,
+    outcomes: [],
+    text: [],
+    verbose: []
+  };
+
+};
+
+// validates that any value provided is less than our throttle value
+Dice.prototype.throttle = function throttle() {
+  var self = this;
+  var parsed = self.data.parsed;
+  var throttles = self.options.throttles;
+
+  _.forOwn(parsed, function(value, key) {
+    if (value && typeof value === 'number' && _.has(throttles, key) && value > throttles[key]) {
+      throw new Error(key + ' (' + value + ') exceeds the limit of ' + throttles[key] + ' that has been imposed');
+    }
+  });
+
+}
+
 // rolls the die and returns the outcome
-function roll(faces) {
+Dice.prototype.roll = function roll(faces) {
   var min = 1;
   var max = faces;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // execute command
-function execute(command) {
-  var parsed = parse(command);
-  var data = {
-    command: command,
-    parsed: parsed,
-    outcomes: [],
-    text: [],
-    verbose: []
-  };
+Dice.prototype.execute = function execute(command) {
+  var self = this;
+  var data = self.data;
+  var parsed = self.parse(command);
 
-  // validate everthing real quick
-  if (parsed.repeat > 100 || parsed.times > 100 || parsed.faces > 100 || parsed.multiplier > 100) {
-    return;
-  }
+  data.command = command;
+  data.parsed = parsed;
+
+  // throttle values provided
+  self.throttle();
 
   _.times(data.parsed.repeat, function(n) {
     var text = [];
@@ -33,7 +68,7 @@ function execute(command) {
 
     // make the rolls
     _.times(data.parsed.times, function(n) {
-      var rolled = roll(data.parsed.faces);
+      var rolled = self.roll(data.parsed.faces);
       outcome.rolls.push(rolled);
       verbose.push('Roll #' + (n+1) + ': ' + rolled);
     });
@@ -115,8 +150,12 @@ function execute(command) {
 }
 
 // parses a command given in dice notation
-function parse(command) {
+Dice.prototype.parse = function parse(command) {
   var parsed = {};
+
+  if (typeof command !== 'string') {
+    throw new Error('Parameter `command` must be a string, not undefined');
+  }
 
   // determine number of dice to roll
   var times = command.match(/(\d+)d/i);
@@ -153,14 +192,21 @@ function parse(command) {
 }
 
 // turns a parsed command into a command string
-function format(parsed) {
+Dice.prototype.format = function format(parsed) {
+  var self = this;
   var command = '';
 
+  if (typeof parsed === 'undefined') {
+    return self.options.command || 'd20';
+  }
+
   // add the number of dice to be rolled
-  command += parsed.times || 1;
+  if (parsed.times) {
+    command += parsed.times;
+  }
 
   // add the number of faces
-  command += 'd' + parsed.faces || 20;
+  command += (parsed.faces) ? 'd' + parsed.faces : 'd' + 20;
 
   // add dice to keep command
   if (parsed.keep) {
@@ -192,9 +238,4 @@ function format(parsed) {
   return command || undefined;
 }
 
-module.exports = {
-  roll: roll,
-  execute: execute,
-  parse: parse,
-  format: format
-};
+module.exports = Dice;
