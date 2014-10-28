@@ -3,7 +3,7 @@ Allows you to execute a command in dice notation, returning the results of that 
 
 # Install
 ```
-npm install dice
+npm install node-dice-js
 ```
 
 # Example
